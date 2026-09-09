@@ -26,7 +26,9 @@ class MainActivity : Activity() {
 
     companion object {
         private const val TEST_CHANNEL_ID = "test1"
+        private const val LIVE_CHANNEL_ID = "live1"
         private const val TEST_STREAM = "https://stream.mux.com/yb2L3z3Z4IKQH02HYkf9xPToVYkOC85WA.m3u8"
+        private const val LIVE_STREAM = "http://80.253.254.74/live/69d2c6f62704.m3u8"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +75,7 @@ class MainActivity : Activity() {
         }
 
         val subtitle = TextView(this).apply {
-            text = "قناة تجريبية HLS"
+            text = "مشغل بث مباشر"
             textSize = 18f
             setTextColor(Color.LTGRAY)
             gravity = Gravity.CENTER
@@ -84,11 +86,11 @@ class MainActivity : Activity() {
             text = "▶ تشغيل القناة"
             textSize = 20f
             isAllCaps = false
-            setOnClickListener { playChannel(TEST_CHANNEL_ID) }
+            setOnClickListener { playChannel(LIVE_CHANNEL_ID) }
         }
 
         val status = TextView(this).apply {
-            text = "4U • TEST CHANNEL"
+            text = "4U • LIVE CHANNEL"
             textSize = 14f
             setTextColor(Color.rgb(0, 229, 176))
             gravity = Gravity.CENTER
@@ -110,13 +112,17 @@ class MainActivity : Activity() {
         if (uri.scheme != "fouruplayer" || uri.host != "play") return
 
         val channelId = uri.getQueryParameter("channel_id") ?: return
-        if (channelId == TEST_CHANNEL_ID) {
+        if (channelId == TEST_CHANNEL_ID || channelId == LIVE_CHANNEL_ID) {
             playChannel(channelId)
         }
     }
 
     private fun playChannel(channelId: String) {
-        if (channelId != TEST_CHANNEL_ID) return
+        val streamUrl = when (channelId) {
+            TEST_CHANNEL_ID -> TEST_STREAM
+            LIVE_CHANNEL_ID -> LIVE_STREAM
+            else -> return
+        }
 
         homeOverlay.visibility = View.GONE
         releasePlayer()
@@ -125,7 +131,7 @@ class MainActivity : Activity() {
             .setAllowCrossProtocolRedirects(true)
             .setConnectTimeoutMs(15000)
             .setReadTimeoutMs(15000)
-            .setUserAgent("4UPlayer/1.1 Android")
+            .setUserAgent("4UPlayer/1.2 Android")
 
         val mediaSourceFactory = DefaultMediaSourceFactory(this)
             .setDataSourceFactory(httpFactory)
@@ -136,7 +142,7 @@ class MainActivity : Activity() {
             .also { exo ->
                 playerView.player = exo
                 exo.repeatMode = Player.REPEAT_MODE_OFF
-                exo.setMediaItem(MediaItem.fromUri(TEST_STREAM))
+                exo.setMediaItem(MediaItem.fromUri(streamUrl))
                 exo.prepare()
                 exo.playWhenReady = true
             }
