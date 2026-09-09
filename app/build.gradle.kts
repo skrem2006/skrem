@@ -4,20 +4,21 @@ plugins {
 }
 
 android {
-    namespace = "com.fouru.player"
+    namespace = "com.fouru.tv"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.fouru.player"
+        applicationId = "com.fouru.tv"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "2.0"
+        versionCode = 10
+        versionName = "1.0.0"
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
