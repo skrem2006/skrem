@@ -26,7 +26,7 @@ class MainActivity : Activity() {
 
     companion object {
         private const val TEST_CHANNEL_ID = "test1"
-        private const val TEST_STREAM = "http://80.253.254.74/live/69d2c6f62704.m3u8"
+        private const val TEST_STREAM = "https://stream.mux.com/yb2L3z3Z4IKQH02HYkf9xPToVYkOC85WA.m3u8"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +73,7 @@ class MainActivity : Activity() {
         }
 
         val subtitle = TextView(this).apply {
-            text = "مشغل بث مباشر"
+            text = "قناة تجريبية HLS"
             textSize = 18f
             setTextColor(Color.LTGRAY)
             gravity = Gravity.CENTER
@@ -88,7 +88,7 @@ class MainActivity : Activity() {
         }
 
         val status = TextView(this).apply {
-            text = "4U • SECURE PLAYER"
+            text = "4U • TEST CHANNEL"
             textSize = 14f
             setTextColor(Color.rgb(0, 229, 176))
             gravity = Gravity.CENTER
@@ -125,7 +125,7 @@ class MainActivity : Activity() {
             .setAllowCrossProtocolRedirects(true)
             .setConnectTimeoutMs(15000)
             .setReadTimeoutMs(15000)
-            .setUserAgent("Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 4UPlayer/1.0")
+            .setUserAgent("4UPlayer/1.1 Android")
 
         val mediaSourceFactory = DefaultMediaSourceFactory(this)
             .setDataSourceFactory(httpFactory)
@@ -146,6 +146,12 @@ class MainActivity : Activity() {
         playerView.player = null
         player?.release()
         player = null
+    }
+
+    override fun onNewIntent(intent: android.content.Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntentData(intent?.data)
     }
 
     override fun onStop() {
