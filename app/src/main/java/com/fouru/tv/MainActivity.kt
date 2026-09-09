@@ -85,9 +85,7 @@ class MainActivity : Activity() {
     }
 
     private fun createCatalog(): View {
-        val scroll = ScrollView(this).apply {
-            isFillViewport = true
-        }
+        val scroll = ScrollView(this).apply { isFillViewport = true }
 
         val body = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -164,9 +162,7 @@ class MainActivity : Activity() {
         }
         card.addView(live, LinearLayout.LayoutParams(dp(70), dp(50)))
 
-        val lp = LinearLayout.LayoutParams(-1, dp(124)).apply {
-            topMargin = dp(28)
-        }
+        val lp = LinearLayout.LayoutParams(-1, dp(124)).apply { topMargin = dp(28) }
         body.addView(card, lp)
 
         val footer = TextView(this).apply {
@@ -190,7 +186,6 @@ class MainActivity : Activity() {
 
         catalogView.visibility = View.GONE
         playerView.visibility = View.VISIBLE
-
         releasePlayer()
 
         val selector = DefaultTrackSelector(this)
@@ -252,22 +247,21 @@ class MainActivity : Activity() {
                 val selector = trackSelector ?: return@setItems
                 val params = selector.buildUponParameters()
                 when (which) {
-                    0 -> params.clearVideoSizeConstraints()
+                    0 -> params.setMaxVideoSize(Int.MAX_VALUE, Int.MAX_VALUE)
                     1 -> params.setMaxVideoSize(854, 480)
                     2 -> params.setMaxVideoSize(1280, 720)
                     3 -> params.setMaxVideoSize(1920, 1080)
                 }
-                selector.parameters = params.build()
+                selector.setParameters(params)
             }
             .show()
     }
 
     private fun isVpnActive(): Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networks = cm.allNetworks
-        return networks.any { network ->
-            val caps = cm.getNetworkCapabilities(network)
-            caps?.hasTransport(NetworkCapabilities.TRANSPORT_VPN) == true
+        return cm.allNetworks.any { network ->
+            cm.getNetworkCapabilities(network)
+                ?.hasTransport(NetworkCapabilities.TRANSPORT_VPN) == true
         }
     }
 
