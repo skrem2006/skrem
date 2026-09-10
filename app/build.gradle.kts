@@ -8,10 +8,10 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.fouru.tv"
+        applicationId = "com.viber.app"
         minSdk = 24
         targetSdk = 35
-        versionCode = 10
+        versionCode = 1
         versionName = "1.0.0"
     }
 
